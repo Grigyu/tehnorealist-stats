@@ -38,7 +38,7 @@ jobs:
         if: env.MAX_AUTH != ''
         run: |
           pip install --quiet playwright
-          python -m playwright install --with-deps chromium
+          python -m playwright install --with-deps chromium chrome
 
       - name: MAX (серверное чтение)
         if: env.MAX_AUTH != ''
