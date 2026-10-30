@@ -1,11 +1,11 @@
 {
  "schema": 1,
  "meta": {
-  "snapshot_at": "2026-10-30T08:12:03.418544+03:00",
-  "snapshot_human": "30.10.2026, 08:12 МСК",
-  "next_human": "09:12 МСК",
+  "snapshot_at": "2026-10-30T09:51:12.029188+03:00",
+  "snapshot_human": "30.10.2026, 09:51 МСК",
+  "next_human": "10:51 МСК",
   "cadence_minutes": 60,
-  "records": 4,
+  "records": 5,
   "collector_version": "1.0",
   "db": "stats.db"
  },
@@ -26,8 +26,8 @@
   "team_resources": 4,
   "mine_resources": 11,
   "subscribers": 897,
-  "publications": 23,
-  "views": 949
+  "publications": 53,
+  "views": 1969
  },
  "resources": [
   {
@@ -38,13 +38,13 @@
    "handle": "vk.com/rilltech",
    "url": "https://vk.com/rilltech",
    "subscribers": 118,
-   "publications": null,
+   "publications": 2,
    "views": null,
    "status": "ok",
    "status_text": "доступно",
    "note": "ТехноРеалист",
-   "source": "VK API groups.getById",
-   "checked_at": "30.10.2026 08:12"
+   "source": "VK API + публичная страница (число записей)",
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "max-rilltech",
@@ -54,11 +54,11 @@
    "handle": "max.ru/id772328908979_biz",
    "url": "https://max.ru/id772328908979_biz",
    "subscribers": 64,
-   "publications": null,
-   "views": null,
+   "publications": 2,
+   "views": 57,
    "status": "ok",
    "status_text": "по браузеру",
-   "note": "канал «ТехноРеалист»",
+   "note": "видимые посты канала: 27 и 30 просмотров (скриншот владельца 29.10.2026 19:55)",
    "source": "живое чтение через браузер владельца (CDP): https://web.max.ru/-73961623255779",
    "checked_at": "30.10.2026 02:44",
    "evidence": "_доказательства/authorized/max-rilltech.png"
@@ -77,7 +77,7 @@
    "status_text": "доступно",
    "note": "ТехноРеалист",
    "source": "Дзен, публичный API канала",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "tenchat-galina",
@@ -93,7 +93,7 @@
    "status_text": "доступно",
    "note": "профиль участника команды",
    "source": "TenChat, публичная страница профиля",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "site-gromrez",
@@ -109,7 +109,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Игорь Громушкин — Архитектор Резонанса. Музыка на расстоянии",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "site-syncmusic",
@@ -125,7 +125,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Музыкальный Видео Мост — играйте вместе из разных городов",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "site-topblog",
@@ -141,7 +141,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Игорь Громушкин — ТопБЛОГ",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "site-buhanochka",
@@ -157,7 +157,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Буханочка — музыкальный фестиваль волонтёров 23–25 октября 2026",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "rutube-channel",
@@ -173,7 +173,7 @@
    "status_text": "доступно",
    "note": "видео в канале",
    "source": "Rutube API video/person",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "tg-way",
@@ -183,13 +183,13 @@
    "handle": "t.me/The_way_to_alpha",
    "url": "https://t.me/The_way_to_alpha",
    "subscribers": 286,
-   "publications": null,
-   "views": null,
+   "publications": 20,
+   "views": 949,
    "status": "ok",
    "status_text": "доступно",
    "note": "@The_way_to_alpha",
-   "source": "t.me, публичная страница канала",
-   "checked_at": "30.10.2026 08:12",
+   "source": "t.me/s, публичная лента канала (последние посты)",
+   "checked_at": "30.10.2026 09:51",
    "last_known": {
     "subscribers": 344,
     "at": "16.10.2026"
@@ -203,13 +203,13 @@
    "handle": "t.me/gromushkin_resonance",
    "url": "https://t.me/gromushkin_resonance",
    "subscribers": 4,
-   "publications": null,
-   "views": null,
+   "publications": 4,
+   "views": 14,
    "status": "ok",
    "status_text": "доступно",
    "note": "@gromushkin_resonance",
-   "source": "t.me, публичная страница канала",
-   "checked_at": "30.10.2026 08:12",
+   "source": "t.me/s, публичная лента канала (последние посты)",
+   "checked_at": "30.10.2026 09:51",
    "last_known": {
     "subscribers": 3,
     "at": "07.10.2026"
@@ -223,13 +223,13 @@
    "handle": "vk.com/gromushkin_resonance",
    "url": "https://vk.com/gromushkin_resonance",
    "subscribers": 1,
-   "publications": null,
+   "publications": 2,
    "views": null,
    "status": "ok",
    "status_text": "доступно",
    "note": "Игорь Громушкин • Архитектор Резонанса",
-   "source": "VK API groups.getById",
-   "checked_at": "30.10.2026 08:12"
+   "source": "VK API + публичная страница (число записей)",
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "vk-igor",
@@ -245,7 +245,7 @@
    "status_text": "доступно",
    "note": "Игорь Громушкин",
    "source": "VK API users.get",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "dzen-mine",
@@ -261,7 +261,7 @@
    "status_text": "доступно",
    "note": "Игорь Громушкин • Архитектор Резонанса",
    "source": "Дзен, публичный API канала",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   },
   {
    "id": "site-nota",
@@ -277,7 +277,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Nota Music Studio — Репетиционная база и студия звукозаписи в Москве",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "30.10.2026 08:12"
+   "checked_at": "30.10.2026 09:51"
   }
  ],
  "history": [
@@ -300,6 +300,11 @@
    "at": "2026-10-30T08:12:03.418544+03:00",
    "subscribers": 897,
    "views": 949
+  },
+  {
+   "at": "2026-10-30T09:51:12.029188+03:00",
+   "subscribers": 897,
+   "views": 1969
   }
  ]
 }
