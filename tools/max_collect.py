@@ -41,8 +41,7 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
     with sync_playwright() as p:
-        ctx = p.chromium.launch_persistent_context(
-            profile,
+        launch_kw = dict(
             headless=True,
             viewport={'width': 1440, 'height': 900},
             locale='ru-RU',
@@ -52,6 +51,13 @@ def main():
             args=['--no-sandbox', '--disable-dev-shm-usage',
                   '--disable-blink-features=AutomationControlled'],
         )
+        # Настоящий Chrome (channel='chrome') даёт тот же отпечаток, что у владельца.
+        # Если его нет — откатываемся на встроенный Chromium.
+        try:
+            ctx = p.chromium.launch_persistent_context(profile, channel='chrome', **launch_kw)
+        except Exception as exc:
+            print('Chrome недоступен, берём Chromium:', str(exc)[:120])
+            ctx = p.chromium.launch_persistent_context(profile, **launch_kw)
         page = ctx.new_page()
         page.goto('https://web.max.ru/', wait_until='domcontentloaded', timeout=60000)
 
@@ -63,12 +69,20 @@ def main():
         page.goto(CHANNEL_URL, wait_until='domcontentloaded', timeout=60000)
 
         text = ''
-        deadline = time.time() + 90
+        deadline = time.time() + 150
         while time.time() < deadline:
             text = page.inner_text('body')
             if re.search(r'\d[\d\s]*\s*followers', text, re.I):
                 break
             time.sleep(3)
+
+        if not re.search(r'\d[\d\s]*\s*followers', text, re.I):
+            try:
+                page.get_by_text('ТехноРеалист', exact=False).first.click(timeout=15000)
+                time.sleep(10)
+                text = page.inner_text('body')
+            except Exception as exc:
+                print('клик по каналу не удался:', str(exc)[:80])
 
         m = re.search(r'(\d[\d\s]*)\s*followers', text, re.I)
         title = ''
