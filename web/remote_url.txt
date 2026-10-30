@@ -1,1 +1,1 @@
-﻿https://raw.githubusercontent.com/USER/REPO/main/data/stats.json
+﻿https://raw.githubusercontent.com/Grigyu/tehnorealist-stats/main/data/stats.json
