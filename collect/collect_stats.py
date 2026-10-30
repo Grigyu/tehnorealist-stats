@@ -114,12 +114,20 @@ def vk_group(slug):
     if 'error' in j:
         return dict(status='noaccess', note='VK API: ' + j['error'].get('error_msg', '')[:60])
     g = j['response']['groups'][0]
-    counters = g.get('counters') or {}
+    posts = None
+    try:
+        st2, b2 = _get('https://vk.com/' + slug, timeout=20)
+        t2 = b2.decode('cp1251', 'replace')
+        m2 = re.search(r'"wall":(\d{1,6})', t2)
+        if m2:
+            posts = int(m2.group(1))
+    except Exception:
+        pass
     return dict(status='ok',
                 subscribers=g.get('members_count'),
-                publications=counters.get('wall') if isinstance(counters, dict) else None,
+                publications=posts,
                 views=None,
-                source='VK API groups.getById',
+                source='VK API + публичная страница (число записей)',
                 note=(g.get('name') or '')[:60])
 
 
@@ -216,8 +224,24 @@ def telegram_page(channel):
         if m:
             digits = re.sub(r'\D', '', m.group(1))
             if digits:
-                return dict(status='ok', subscribers=int(digits), publications=None, views=None,
-                            source='t.me, публичная страница канала', note='@' + channel)
+                posts = len(re.findall(r'data-post="', t))
+                views = 0
+                for v in re.findall(r'tgme_widget_message_views[^>]*>([^<]+)<', t):
+                    v = v.strip().replace('\xa0', '').replace(',', '.')
+                    mm = re.match(r'([\d.]+)\s*([KkМмMm])?', v)
+                    if not mm:
+                        continue
+                    num = float(mm.group(1))
+                    suf = (mm.group(2) or '').lower()
+                    if suf in ('k', 'к'):
+                        num *= 1000
+                    elif suf in ('m', 'м'):
+                        num *= 1000000
+                    views += int(num)
+                return dict(status='ok', subscribers=int(digits),
+                            publications=posts or None, views=(views or None),
+                            source='t.me/s, публичная лента канала (последние посты)',
+                            note='@' + channel)
     return dict(status='noaccess',
                 note='сеть до t.me недоступна' + ((' (%s)' % err) if err else '') + '; нужен VPN/прокси')
 
@@ -381,6 +405,10 @@ def snapshot():
         m = manual.get(r['id'])
         if m and item['subscribers'] is None and m.get('subscribers') is not None:
             item['subscribers'] = m['subscribers']
+            if m.get('publications') is not None:
+                item['publications'] = m['publications']
+            if m.get('views') is not None:
+                item['views'] = m['views']
             item['status'] = 'ok'
             item['status_text'] = m.get('status_text') or 'по скриншоту'
             item['source'] = m.get('source', 'ручное снятие со скриншота')
