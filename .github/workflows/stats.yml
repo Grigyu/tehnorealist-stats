@@ -1,0 +1,73 @@
+name: stats
+
+on:
+  schedule:
+    - cron: '5 * * * *'   # каждый час в :05
+  workflow_dispatch:        # запуск вручную из вкладки Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    env:
+      MAX_AUTH: ${{ secrets.MAX_AUTH }}
+      MAX_DEVICE_ID: ${{ secrets.MAX_DEVICE_ID }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Кэш профиля MAX (чтобы не логиниться каждый час)
+        uses: actions/cache@v4
+        with:
+          path: max_profile
+          key: max-profile-v1
+
+      - name: Playwright для MAX
+        if: env.MAX_AUTH != ''
+        run: |
+          pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+
+      - name: MAX (серверное чтение)
+        if: env.MAX_AUTH != ''
+        continue-on-error: true
+        env:
+          MAX_AUTH: ${{ secrets.MAX_AUTH }}
+          MAX_DEVICE_ID: ${{ secrets.MAX_DEVICE_ID }}
+          MAX_PROFILE_DIR: ./max_profile
+          MAX_CHANNEL_URL: https://web.max.ru/-73961623255779
+          TZ: Europe/Moscow
+        run: python tools/max_collect.py
+
+      - name: Сбор статистики (VK, Дзен, Rutube, TenChat, Telegram, сайты)
+        env:
+          VK_TOKEN: ${{ secrets.VK_TOKEN }}
+          TZ: Europe/Moscow
+        run: python collect/collect_stats.py
+
+      - name: Сборка страницы
+        run: python web/build.py
+
+      - name: Сохранение снимка в репозиторий
+        run: |
+          git config user.name "stats-bot"
+          git config user.email "stats-bot@users.noreply.github.com"
+          git add data/stats.json web/index.html collect/stats.db collect/authorized_values.json _доказательства || true
+          if git diff --staged --quiet; then
+            echo "изменений нет"
+          else
+            git commit -m "stats: $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
