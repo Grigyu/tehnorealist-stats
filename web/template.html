@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статистика ресурсов — ТехноРеалист · Архитектор Резонанса</title>
+<meta name="description" content="Сводка по площадкам команды «ТехноРеалист» и ресурсам проекта «Архитектор Резонанса»: подписчики, публикации, просмотры. Данные собираются автоматически раз в час.">
+<meta name="theme-color" content="#16233D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2316233D'/%3E%3Ctext x='8' y='12' font-family='Georgia,serif' font-size='10' fill='%23C08A2E' text-anchor='middle'%3E%D0%A2%D0%A0%3C/text%3E%3C/svg%3E">
+<style>
+/* ==========================================================================
+   Страница статистики. Глубокий синий, холодная бумага, охра.
+   Всё автономно: системные шрифты, inline-иконки, без внешних запросов.
+   ========================================================================== */
+:root{
+  --brand:#16233D;
+  --brand-deep:#0F1930;
+  --brand-line:#2A3B5C;
+  --paper:#F7F8FA;
+  --card:#FFFFFF;
+  --canvas:#EDF0F5;
+  --line:#DCE1E8;
+  --line-soft:#E9EDF2;
+  --line-strong:#C6CEDA;
+  --ink:#1C2430;
+  --text:#27303C;
+  --dust:#6B7686;
+  --ochre:#C08A2E;
+  --ochre-soft:#E3C98F;
+  --brick:#A4472B;
+  --link:#24406B;
+  --serif:Georgia,"Times New Roman","PT Serif",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --max:1200px;
+  --pad:26px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--text);overflow-x:hidden;
+  font:15px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+h1,h2,h3{margin:0;font-family:var(--serif);color:var(--ink);line-height:1.16;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--ochre);outline-offset:3px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad);width:100%}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;top:0;background:var(--brand);color:#fff;padding:10px 16px;z-index:99}
+.skip:focus{left:12px;top:12px}
+
+/* ── 1. техническая полоса ─────────────────────────────────── */
+.strip{background:var(--brand-deep);color:#8B9DBB;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.strip-in{display:flex;align-items:center;justify-content:space-between;gap:6px 20px;min-height:34px;padding-top:7px;padding-bottom:7px;flex-wrap:wrap}
+.strip-in span{white-space:nowrap}
+
+/* ── 2. шапка ──────────────────────────────────────────────── */
+.masthead{background:var(--brand);color:#fff;border-bottom:1px solid var(--brand-line)}
+.masthead-in{display:flex;align-items:center;justify-content:space-between;gap:18px 28px;min-height:88px;padding-top:15px;padding-bottom:15px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-mark{width:44px;height:44px;flex:0 0 auto;border:1px solid #3C4F72;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;letter-spacing:.04em;color:var(--ochre-soft)}
+.brand-name{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.12em;color:#fff;line-height:1.1}
+.brand-sub{margin-top:4px;font-size:11.5px;letter-spacing:.015em;color:#A9B8D1}
+.brand-right{display:flex;align-items:center;gap:12px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#D5DEEB;text-align:right}
+.brand-right::before{content:"";width:7px;height:7px;background:var(--ochre);flex:0 0 auto}
+.statusline{background:var(--canvas);border-bottom:1px solid var(--line);font-size:12.5px;color:#3E4A5B}
+.statusline-in{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:40px;padding-top:8px;padding-bottom:8px}
+.statusline .live{width:6px;height:6px;background:var(--ochre);flex:0 0 auto}
+.statusline b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.statusline .sep{color:#A7B1C0}
+
+/* ── 3. заголовок ──────────────────────────────────────────── */
+main{padding:38px 0 0}
+.intro h1{font-size:clamp(30px,3.6vw,44px);font-weight:700}
+.intro .lead{margin-top:10px;max-width:760px;font-size:16px;line-height:1.6;color:var(--dust)}
+
+/* ── 4. KPI ────────────────────────────────────────────────── */
+.kpi{margin-top:26px;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.kpi-cell{background:var(--card);padding:17px 20px 16px;min-width:0}
+.kpi-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);line-height:1.4;min-height:2.8em}
+.kpi-value{margin-top:7px;font-family:var(--serif);font-size:clamp(28px,2.6vw,36px);font-weight:700;line-height:1;color:var(--ochre);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.kpi-value.is-na{font-size:25px;color:#9AA4B2;letter-spacing:0}
+
+/* ── 5. таблицы ────────────────────────────────────────────── */
+.groups{margin-top:38px;display:grid;grid-template-columns:minmax(0,1fr);gap:34px}
+.group-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.group-no{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ochre);flex:0 0 auto;padding-top:2px}
+.group-titles{flex:1 1 auto;min-width:220px}
+.group-head h2{font-size:clamp(20px,2.2vw,26px);font-weight:700}
+.group-note{margin-top:4px;font-size:13px;color:var(--dust)}
+.group-count{flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dust)}
+.table-wrap{background:var(--card);border:1px solid var(--line);border-radius:2px;overflow-x:auto}
+table{width:100%;table-layout:fixed;border-collapse:collapse;min-width:960px;font-size:13.5px}
+col.c-platform{width:118px}
+col.c-num{width:104px}
+col.c-status{width:124px}
+col.c-checked{width:134px}
+caption{text-align:left}
+thead th{padding:11px 14px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);text-align:left;white-space:nowrap;border-bottom:1px solid var(--brand);background:var(--card)}
+thead th.num{text-align:right}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr:hover{background:#FBFCFD}
+tbody tr:last-child td{border-bottom:1px solid var(--line)}
+td.num{text-align:right;padding-right:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+th.num{padding-right:18px}
+td.cell-platform{white-space:nowrap;width:130px}
+.plat{display:inline-flex;align-items:center;gap:9px}
+.plat-mark{width:24px;height:24px;flex:0 0 auto;border:1px solid var(--line);background:#FAFBFC;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;letter-spacing:.02em;color:var(--brand)}
+.plat-name{font-size:12.5px;color:#4A5666}
+td.cell-resource{min-width:250px}
+td.cell-resource a{color:var(--ink);font-weight:600;border-bottom:1px solid transparent}
+td.cell-resource a:hover{color:var(--link);border-bottom-color:var(--ochre-soft);text-decoration:none}
+.handle{display:block;margin-top:2px;font-size:12px;color:var(--dust);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.res-note{display:block;margin-top:2px;font-size:11px;font-style:italic;color:#98A2B0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.na{color:#9AA4B2}
+.last-known{font-style:italic;color:var(--dust);border-bottom:1px dotted var(--line-strong);cursor:help;font-variant-numeric:tabular-nums}
+td.cell-status{white-space:normal}
+.status{font-size:12.5px;color:var(--ink)}
+.status .dot{display:inline-block;width:7px;height:7px;margin-right:7px;vertical-align:middle;border-radius:50%;background:var(--ochre)}
+.status.st-partial .dot{opacity:.42}
+.status.st-noaccess .dot{width:5px;height:5px;background:transparent;border:1.5px solid var(--brick)}
+.status.st-missing .dot{background:var(--brick)}
+.status.st-noaccess,.status.st-missing{color:var(--brick)}
+td.cell-checked{text-align:right;white-space:nowrap;font-size:12px;color:var(--dust);font-variant-numeric:tabular-nums;padding-right:18px}
+tfoot td{padding:12px 14px;border-top:2px solid var(--brand);background:#FBFCFD;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dust);white-space:nowrap}
+tfoot td.num{text-align:right;padding-right:18px;font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--ink);font-variant-numeric:tabular-nums}
+tfoot td.num .na{font-family:var(--sans);font-size:12px;font-weight:400}
+.empty-note{padding:18px;border:1px dashed var(--line-strong);border-radius:2px;color:var(--dust);font-size:13px;background:var(--card)}
+
+/* ── 6. как это работает ───────────────────────────────────── */
+.how{margin-top:46px;padding-top:30px;border-top:1px solid var(--line)}
+.how h2{font-size:clamp(20px,2.2vw,26px)}
+.steps{margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;list-style:none;padding:0}
+.step{border-top:1px solid var(--line-strong);padding-top:13px}
+.step-no{display:block;margin-bottom:8px;font-family:var(--serif);font-size:15px;color:var(--ochre);letter-spacing:.04em}
+.step h3{margin-bottom:6px;font-family:var(--sans);font-size:14px;font-weight:600;line-height:1.35;letter-spacing:0;color:var(--ink)}
+.step p{font-size:12.5px;line-height:1.5;color:var(--dust)}
+.method{margin-top:22px;max-width:920px;padding:10px 0 10px 14px;border-left:2px solid var(--ochre);font-size:12.5px;line-height:1.55;color:var(--dust)}
+.method p{margin:0}
+.method p + p{margin-top:6px}
+.method-star{font-size:12px;color:var(--dust)}
+.method-src{margin-top:9px;padding-top:7px;border-top:1px solid var(--line);font-size:11.5px;color:#8C97A6}
+
+/* ── 7. динамика ───────────────────────────────────────────── */
+.trend{margin-top:42px;padding-top:28px;border-top:1px solid var(--line)}
+.trend-head{display:flex;align-items:baseline;gap:8px 16px;flex-wrap:wrap;margin-bottom:13px}
+.trend-head h2{font-size:clamp(20px,2.2vw,26px)}
+.trend-note{font-size:12.5px;color:var(--dust)}
+.trend-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:16px 18px;display:flex;align-items:center;gap:14px 30px;flex-wrap:wrap}
+.trend-chart{flex:1 1 340px;min-width:260px}
+.trend-chart svg{display:block;width:100%;height:auto}
+.trend-legend{display:flex;flex-direction:column;gap:9px;min-width:172px;font-size:12.5px;color:var(--text)}
+.legend-row{display:flex;align-items:baseline;gap:9px}
+.legend-sw{width:16px;height:2px;flex:0 0 auto;background:var(--ochre);transform:translateY(-3px)}
+.legend-sw.views{background:var(--dust)}
+.legend-row b{margin-left:auto;font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.trend-range{font-size:11px;color:var(--dust);letter-spacing:.02em}
+.trend-empty{display:flex;align-items:center;gap:12px 28px;flex-wrap:wrap;width:100%}
+.trend-empty svg{flex:1 1 340px;min-width:260px;display:block;width:100%;height:auto}
+.trend-empty p{flex:0 1 280px;font-size:12.5px;line-height:1.55;color:var(--dust)}
+.trend-empty b{color:var(--ink);font-weight:600}
+
+/* ── 8. подвал ─────────────────────────────────────────────── */
+.site-foot{margin-top:54px;background:var(--brand);border-top:3px solid var(--ochre);color:#B7C4D8}
+.foot-in{display:flex;align-items:baseline;justify-content:space-between;gap:8px 24px;padding-top:26px;padding-bottom:26px;flex-wrap:wrap}
+.foot-copy{font-size:13px;color:#DCE4EF}
+.foot-copy a{color:#fff}
+.foot-copy a:hover{color:var(--ochre-soft)}
+.foot-small{font-size:11.5px;color:#8FA0BC;letter-spacing:.02em}
+
+/* ── адаптив ───────────────────────────────────────────────── */
+@media (max-width:1020px){
+  .kpi{grid-template-columns:repeat(3,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr);gap:22px}
+}
+@media (max-width:760px){
+  :root{--pad:18px}
+  .masthead-in{min-height:0;padding-top:16px;padding-bottom:16px}
+  .brand-name{font-size:19px}
+  .kpi{grid-template-columns:repeat(2,1fr)}
+  .kpi-value{font-size:31px}
+  .steps{grid-template-columns:1fr}
+  .group-count{margin-left:0}
+}
+@media (max-width:460px){
+  .kpi{grid-template-columns:1fr}
+  .strip{font-size:9.5px;letter-spacing:.1em}
+  .strip-in span{white-space:normal}
+  .statusline-in{gap:6px}
+  .brand-right{font-size:10px;letter-spacing:.16em}
+}
+
+/* ── печать ────────────────────────────────────────────────── */
+@media print{
+  @page{margin:14mm}
+  body{background:#fff;font-size:10.5px}
+  .strip,.masthead,.statusline,.site-foot{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .table-wrap{overflow:visible;border-color:var(--line-strong)}
+  table{min-width:0;font-size:9.5px}
+  thead th,tbody td,tfoot td{padding:7px 9px}
+  .group-head{break-after:avoid}
+  tfoot{break-inside:avoid}
+  tr{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+  .kpi-cell{padding:10px 12px}
+  .kpi-value{font-size:24px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Перейти к содержанию</a>
+
+<!-- 1. Техническая полоса -->
+<div class="strip">
+  <div class="wrap strip-in">
+    <span>МИНПРОМТОРГ · ТОПБЛОГ · СЕНЕЖ · 30.10.2026</span>
+    <span>СИСТЕМА СБОРА СТАТИСТИКИ</span>
+  </div>
+</div>
+
+<!-- 2. Шапка -->
+<header class="masthead">
+  <div class="wrap masthead-in">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">ТР</div>
+      <div>
+        <div class="brand-name">ТЕХНОРЕАЛИСТ</div>
+        <div class="brand-sub">медиапроект о реальной промышленности</div>
+      </div>
+    </div>
+    <div class="brand-right">АРХИТЕКТОР РЕЗОНАНСА</div>
+  </div>
+</header>
+<div class="statusline">
+  <div class="wrap statusline-in">
+    <span class="live" aria-hidden="true"></span>
+    <span>Сбор данных: каждый час, автоматически</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span>Последний снимок: <b id="snapshot-human">н/д</b></span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span>Следующий: <b id="next-human">н/д</b></span>
+  </div>
+</div>
+
+<main id="main" class="wrap">
+  <!-- 3. Заголовок -->
+  <section class="intro" aria-labelledby="page-title">
+    <h1 id="page-title">Статистика ресурсов</h1>
+    <p class="lead">Кто и как читает наши площадки. Данные собираются по расписанию и записываются в базу.</p>
+  </section>
+
+  <!-- 4. KPI -->
+  <section class="kpi" aria-label="Ключевые показатели">
+    <div class="kpi-cell">
+      <div class="kpi-label">Ресурсов в мониторинге</div>
+      <div class="kpi-value" id="kpi-resources">—</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Суммарная аудитория</div>
+      <div class="kpi-value" id="kpi-subscribers">—</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Публикаций / видео</div>
+      <div class="kpi-value" id="kpi-publications">—</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Просмотров</div>
+      <div class="kpi-value" id="kpi-views">—</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Снимков в базе</div>
+      <div class="kpi-value" id="kpi-records">—</div>
+    </div>
+  </section>
+
+  <!-- 5. Таблицы групп -->
+  <div class="groups" id="groups"></div>
+
+  <!-- 6. Как это работает -->
+  <section class="how" aria-labelledby="how-title">
+    <h2 id="how-title">Как это работает</h2>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-no">01</span>
+        <h3>Обход ресурсов раз в час</h3>
+        <p>Сборщик проходит по реестру площадок и снимает показатели по каждому ресурсу.</p>
+      </li>
+      <li class="step">
+        <span class="step-no">02</span>
+        <h3>Официальные API и публичные страницы</h3>
+        <p>Только открытые источники: API платформ и страницы, доступные без входа.</p>
+      </li>
+      <li class="step">
+        <span class="step-no">03</span>
+        <h3>Запись снимка в базу SQLite</h3>
+        <p>Один снимок — одна запись с временем МСК и источником по каждому ресурсу.</p>
+      </li>
+      <li class="step">
+        <span class="step-no">04</span>
+        <h3>Публикация снимка на странице</h3>
+        <p>Свежий снимок вшивается в страницу при сборке — без запросов в момент открытия.</p>
+      </li>
+    </ol>
+    <div class="method">
+      <p>Учитываются только публично доступные показатели. Закрытые метрики не оцениваются и не додумываются. Время снимка — МСК.</p>
+      <p class="method-star">* — последнее известное значение: площадка не отдаёт публичные счётчики, повторная проверка из среды сбора невозможна.</p>
+      <p class="method-src">Источники: VK API, публичный API Дзена, Rutube API, HTTP-проверка страниц. Telegram и MAX публичные счётчики не отдают.</p>
+    </div>
+  </section>
+
+  <!-- 7. Динамика -->
+  <section class="trend" aria-labelledby="trend-title">
+    <div class="trend-head">
+      <h2 id="trend-title">Динамика</h2>
+      <p class="trend-note">История снимков: подписчики и просмотры, время МСК</p>
+    </div>
+    <div class="trend-card" id="trend-body"></div>
+  </section>
+</main>
+
+<!-- 8. Подвал -->
+<footer class="site-foot">
+  <div class="wrap foot-in">
+    <div class="foot-copy">© 2026 Игорь Громушкин · ООО «РЕЗОНАР» · <a href="https://gromrez.ru/" target="_blank" rel="noopener">gromrez.ru</a></div>
+    <div class="foot-small">Данные обновляются автоматически</div>
+  </div>
+</footer>
+
+<!-- Данные: вшиваются build.py из data/stats.json -->
+<script>window.STATISTICS=__STATISTICS_JSON__;</script>
+<script>
+(function(){
+  "use strict";
+
+  var DATA = window.STATISTICS || {};
+  var META = DATA.meta || {};
+  var GROUPS = Array.isArray(DATA.groups) ? DATA.groups : [];
+  var RESOURCES = Array.isArray(DATA.resources) ? DATA.resources : [];
+  var HISTORY = Array.isArray(DATA.history) ? DATA.history : [];
+  var TOTALS = DATA.totals || {};
+  /* Живые данные: серверный сбор (GitHub Actions) обновляет этот JSON каждый час.
+     Если адрес пуст или сеть недоступна — остаются данные, вшитые при сборке. */
+  var REMOTE_STATS_URL = "__REMOTE_STATS_URL__";
+
+  var STATUS_FALLBACK = {ok:"доступно", partial:"частично", noaccess:"закрыто", missing:"не найдено", nodata:"нет данных"};
+  var STATUS_CLASS = {ok:"st-ok", partial:"st-partial", noaccess:"st-noaccess", missing:"st-missing", nodata:"st-noaccess"};
+  var PLATFORM_MARK = {
+    "VK":"VK", "Telegram":"TG", "Rutube":"RT", "Дзен":"ДЗ", "MAX":"MX",
+    "Сайт":"WWW", "LinkedIn":"IN", "YouTube":"YT", "Одноклассники":"ОК", "TenChat":"TC"
+  };
+
+  function isNum(v){ return typeof v === "number" && isFinite(v); }
+  function numOrNull(v){ return isNum(v) ? v : null; }
+  function esc(v){
+    return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function enNum(n){
+    try{
+      return new Intl.NumberFormat("ru-RU").format(n);
+    }catch(e){
+      return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00A0");
+    }
+  }
+  function fmtNum(v, naClass){
+    if(!isNum(v)) return '<span class="na">н/д</span>';
+    return enNum(v);
+  }
+  /* Число из снимка, иначе последнее известное значение с пометкой «*»,
+     иначе «н/д». Ноль — реальное значение, а не пропуск. */
+  function metricCell(res, field){
+    if(isNum(res[field])) return enNum(res[field]);
+    var lk = res.last_known;
+    if(lk && typeof lk === "object" && isNum(lk[field])){
+      var at = lk.at ? " на " + lk.at : "";
+      return '<span class="last-known" title="последнее известное значение' + esc(at) + '">'
+        + enNum(lk[field]) + "*</span>";
+    }
+    return '<span class="na">н/д</span>';
+  }
+  function sumOf(rows, key){
+    var s = 0;
+    for(var i = 0; i < rows.length; i++){
+      if(isNum(rows[i][key])) s += rows[i][key];
+    }
+    return s;
+  }
+  function plural(n, one, few, many){
+    var a = Math.abs(n) % 100, b = a % 10;
+    if(a > 10 && a < 20) return many;
+    if(b > 1 && b < 5) return few;
+    if(b === 1) return one;
+    return many;
+  }
+  function safeUrl(u){
+    return (typeof u === "string" && /^https?:\/\//i.test(u)) ? u : "";
+  }
+  function platformMark(name){
+    if(PLATFORM_MARK[name]) return PLATFORM_MARK[name];
+    return String(name || "—").replace(/[^0-9A-Za-zА-Яа-яЁё]/g, "").slice(0, 3).toUpperCase() || "—";
+  }
+  function setText(id, text, na){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = text;
+    if(na) el.className += " is-na";
+  }
+
+  /* ── KPI ─────────────────────────────────────────────────── */
+  function renderKpi(){
+    var resources = isNum(TOTALS.resources) ? TOTALS.resources : RESOURCES.length;
+    var subscribers = isNum(TOTALS.subscribers) ? TOTALS.subscribers : sumOf(RESOURCES, "subscribers");
+    var publications = isNum(TOTALS.publications) ? TOTALS.publications : sumOf(RESOURCES, "publications");
+    var views = isNum(TOTALS.views) ? TOTALS.views : sumOf(RESOURCES, "views");
+    var records = numOrNull(META.records);
+
+    setText("kpi-resources", isNum(resources) ? enNum(resources) : "н/д", !isNum(resources));
+    setText("kpi-subscribers", isNum(subscribers) ? enNum(subscribers) : "н/д", !isNum(subscribers));
+    setText("kpi-publications", isNum(publications) ? enNum(publications) : "н/д", !isNum(publications));
+    setText("kpi-views", isNum(views) ? enNum(views) : "н/д", !isNum(views));
+    setText("kpi-records", records !== null ? enNum(records) : "н/д", records === null);
+  }
+
+  /* ── статусная строка ────────────────────────────────────── */
+  function renderMeta(){
+    setText("snapshot-human", META.snapshot_human || "н/д", !META.snapshot_human);
+    setText("next-human", META.next_human || "н/д", !META.next_human);
+  }
+
+  /* ── таблицы групп ───────────────────────────────────────── */
+  function renderRow(r){
+    var st = STATUS_CLASS[r.status] ? r.status : "ok";
+    var statusText = r.status_text || STATUS_FALLBACK[st] || "н/д";
+    var url = safeUrl(r.url);
+    var titleText = String(r.title == null ? "" : r.title).trim();
+    var noteText = String(r.note == null ? "" : r.note).trim();
+    var noteIsDuplicate = !noteText
+      || noteText.toLowerCase() === titleText.toLowerCase()
+      || titleText.toLowerCase().indexOf(noteText.toLowerCase()) !== -1;
+    var title = esc(titleText || r.handle || r.id || "—");
+    var hint = noteText ? ' title="' + esc(noteText) + '"' : "";
+    var link = url
+      ? '<a href="' + esc(url) + '" target="_blank" rel="noopener"' + hint + '>' + title + "</a>"
+      : title;
+    var checked = r.checked_at ? esc(r.checked_at) : '<span class="na">н/д</span>';
+
+    return '<tr>'
+      + '<td class="cell-platform"><span class="plat"><span class="plat-mark" aria-hidden="true">' + esc(platformMark(r.platform)) + "</span>"
+      + '<span class="plat-name">' + esc(r.platform || "—") + "</span></span></td>"
+      + '<td class="cell-resource">' + link
+      + (r.handle ? '<span class="handle">' + esc(r.handle) + "</span>" : "")
+      + "</td>"
+      + '<td class="num">' + metricCell(r, "subscribers") + "</td>"
+      + '<td class="num">' + metricCell(r, "publications") + "</td>"
+      + '<td class="num">' + metricCell(r, "views") + "</td>"
+      + '<td class="cell-status"><span class="status ' + STATUS_CLASS[st] + '"><span class="dot" aria-hidden="true"></span>' + esc(statusText) + "</span></td>"
+      + '<td class="cell-checked">' + checked + "</td>"
+      + "</tr>";
+  }
+
+  function renderGroups(){
+    var host = document.getElementById("groups");
+    if(!host) return;
+
+    if(!GROUPS.length){
+      host.innerHTML = '<p class="empty-note">Группы ресурсов не заданы в data/stats.json.</p>';
+      return;
+    }
+
+    var html = "";
+    GROUPS.forEach(function(g, gi){
+      var id = String(g.id || "");
+      var rows = RESOURCES.filter(function(r){ return String(r.group || "") === id; });
+      var title = esc(g.title || id || "Группа");
+      var groupTitleId = "group-" + (id.replace(/[^0-9A-Za-z_-]/g, "") || String(gi + 1));
+      var countText = rows.length + " " + plural(rows.length, "ресурс", "ресурса", "ресурсов");
+
+      html += '<section class="group" aria-labelledby="' + groupTitleId + '">'
+        + '<div class="group-head">'
+        + '<span class="group-no" aria-hidden="true">' + String(gi + 1).padStart(2, "0") + "</span>"
+        + '<div class="group-titles"><h2 id="' + groupTitleId + '">' + title + "</h2>"
+        + (g.note ? '<p class="group-note">' + esc(g.note) + "</p>" : "")
+        + "</div>"
+        + '<span class="group-count">' + countText + "</span>"
+        + "</div>"
+        + '<div class="table-wrap"><table>'
+        + '<caption class="sr-only">' + title + "</caption>"
+        + '<colgroup><col class="c-platform"><col><col class="c-num"><col class="c-num"><col class="c-num"><col class="c-status"><col class="c-checked"></colgroup>'
+        + "<thead><tr>"
+        + '<th scope="col">Площадка</th><th scope="col">Ресурс</th>'
+        + '<th scope="col" class="num">Подписчики</th><th scope="col" class="num">Публикации</th><th scope="col" class="num">Просмотры</th>'
+        + '<th scope="col">Статус</th><th scope="col" class="num">Проверено</th>'
+        + "</tr></thead><tbody>";
+
+      if(rows.length){
+        rows.forEach(function(r){ html += renderRow(r); });
+      }else{
+        html += '<tr><td colspan="7" class="na">Нет ресурсов в этой группе.</td></tr>';
+      }
+
+      html += "</tbody><tfoot><tr>"
+        + '<td colspan="2">Итого по группе</td>'
+        + '<td class="num">' + fmtNum(sumOf(rows, "subscribers")) + "</td>"
+        + '<td class="num">' + fmtNum(sumOf(rows, "publications")) + "</td>"
+        + '<td class="num">' + fmtNum(sumOf(rows, "views")) + "</td>"
+        + '<td colspan="2"></td>'
+        + "</tr></tfoot></table></div></section>";
+    });
+
+    host.innerHTML = html;
+  }
+
+  /* ── динамика ────────────────────────────────────────────── */
+  function atLabel(at){
+    if(typeof at !== "string" || at.length < 16) return "";
+    return at.slice(8, 10) + "." + at.slice(5, 7) + " " + at.slice(11, 16);
+  }
+
+  function renderTrend(){
+    var host = document.getElementById("trend-body");
+    if(!host) return;
+
+    var points = [];
+    HISTORY.forEach(function(p){
+      if(!p || typeof p !== "object") return;
+      var sub = numOrNull(p.subscribers);
+      var views = numOrNull(p.views);
+      if(sub === null && views === null) return;
+      points.push({at: p.at, sub: sub, views: views});
+    });
+
+    var hasChart = HISTORY.length >= 2 && points.length >= 2;
+    if(!hasChart){
+      var message;
+      if(HISTORY.length >= 2 && points.length < 2){
+        message = "<b>Недостаточно числовых данных</b> — в истории пока нет заполненных подписчиков и просмотров.";
+      }else{
+        message = "<b>Первый снимок</b>"
+          + (META.snapshot_human ? " — " + esc(META.snapshot_human) : "")
+          + ". Динамика появится после второго замера.";
+      }
+      host.innerHTML = '<div class="trend-empty">'
+        + '<svg viewBox="0 0 560 104" role="img" aria-label="График динамики пока пуст">'
+        + '<line x1="6" y1="12" x2="516" y2="12" stroke="#E9EDF2" stroke-width="1"/>'
+        + '<line x1="6" y1="50" x2="516" y2="50" stroke="#E9EDF2" stroke-width="1"/>'
+        + '<line x1="6" y1="88" x2="516" y2="88" stroke="#C6CEDA" stroke-width="1" stroke-dasharray="3 4"/>'
+        + "</svg>"
+        + "<p>" + message + "</p>"
+        + "</div>";
+      return;
+    }
+
+    var W = 560, H = 104, padL = 6, padR = 44, padT = 12, padB = 22;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var maxValue = 0;
+    points.forEach(function(p){
+      if(p.sub !== null && p.sub > maxValue) maxValue = p.sub;
+      if(p.views !== null && p.views > maxValue) maxValue = p.views;
+    });
+    var scaleMax = maxValue > 0 ? maxValue : 1;
+    var n = points.length;
+
+    function px(i){ return padL + plotW * (n <= 1 ? 0 : i / (n - 1)); }
+    function py(v){ return padT + plotH * (1 - v / scaleMax); }
+
+    function pathFor(key){
+      var d = "", started = false;
+      points.forEach(function(p, i){
+        var v = p[key];
+        if(v === null){ started = false; return; }
+        d += (started ? " L" : " M") + px(i).toFixed(1) + " " + py(v).toFixed(1);
+        started = true;
+      });
+      return d.trim();
+    }
+    function lastPoint(key){
+      for(var i = points.length - 1; i >= 0; i--){
+        if(points[i][key] !== null) return {x: px(i), y: py(points[i][key]), v: points[i][key]};
+      }
+      return null;
+    }
+
+    var grid = ""
+      + '<line x1="' + padL + '" y1="' + py(scaleMax) + '" x2="' + (W - padR) + '" y2="' + py(scaleMax) + '" stroke="#E9EDF2" stroke-width="1"/>'
+      + '<line x1="' + padL + '" y1="' + py(scaleMax / 2) + '" x2="' + (W - padR) + '" y2="' + py(scaleMax / 2) + '" stroke="#E9EDF2" stroke-width="1"/>'
+      + '<line x1="' + padL + '" y1="' + py(0) + '" x2="' + (W - padR) + '" y2="' + py(0) + '" stroke="#C6CEDA" stroke-width="1"/>';
+
+    var labels = "";
+    if(maxValue > 0){
+      labels += '<text x="' + (W - padR + 7) + '" y="' + (py(scaleMax) + 3.5) + '" font-size="10" fill="#8C97A6">' + enNum(maxValue) + "</text>";
+      labels += '<text x="' + (W - padR + 7) + '" y="' + (py(0) + 3.5) + '" font-size="10" fill="#8C97A6">0</text>';
+    }
+
+    var dSub = pathFor("sub"), dViews = pathFor("views");
+    var lpSub = lastPoint("sub"), lpViews = lastPoint("views");
+    var lastAt = points[points.length - 1].at;
+    var firstAt = points[0].at;
+
+    var svg = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Динамика подписчиков и просмотров по истории снимков">'
+      + grid
+      + (dViews ? '<path d="' + dViews + '" fill="none" stroke="#6B7686" stroke-width="1.2" stroke-linejoin="round"/>' : "")
+      + (dSub ? '<path d="' + dSub + '" fill="none" stroke="#C08A2E" stroke-width="1.7" stroke-linejoin="round"/>' : "")
+      + (lpViews ? '<circle cx="' + lpViews.x.toFixed(1) + '" cy="' + lpViews.y.toFixed(1) + '" r="2.4" fill="#6B7686"/>' : "")
+      + (lpSub ? '<circle cx="' + lpSub.x.toFixed(1) + '" cy="' + lpSub.y.toFixed(1) + '" r="2.8" fill="#C08A2E"/>' : "")
+      + (firstAt ? '<text x="' + padL + '" y="' + (H - 5) + '" font-size="10" fill="#8C97A6">' + esc(atLabel(firstAt)) + "</text>" : "")
+      + (lastAt ? '<text x="' + (W - padR) + '" y="' + (H - 5) + '" font-size="10" fill="#8C97A6" text-anchor="end">' + esc(atLabel(lastAt)) + "</text>" : "")
+      + labels
+      + "</svg>";
+
+    var legend = '<div class="trend-legend">'
+      + '<div class="legend-row"><span class="legend-sw" aria-hidden="true"></span><span>Подписчики</span><b>' + (lpSub ? enNum(lpSub.v) : "н/д") + "</b></div>"
+      + '<div class="legend-row"><span class="legend-sw views" aria-hidden="true"></span><span>Просмотры</span><b>' + (lpViews ? enNum(lpViews.v) : "н/д") + "</b></div>"
+      + '<div class="trend-range">' + (atLabel(firstAt) ? esc(atLabel(firstAt)) + " — " : "") + esc(atLabel(lastAt)) + " МСК · " + points.length + " " + plural(points.length, "точка", "точки", "точек") + "</div>"
+      + "</div>";
+
+    host.innerHTML = '<div class="trend-chart">' + svg + "</div>" + legend;
+  }
+
+  function boot(){
+    META = DATA.meta || {};
+    GROUPS = Array.isArray(DATA.groups) ? DATA.groups : [];
+    RESOURCES = Array.isArray(DATA.resources) ? DATA.resources : [];
+    HISTORY = Array.isArray(DATA.history) ? DATA.history : [];
+    TOTALS = DATA.totals || {};
+    renderMeta(); renderKpi(); renderGroups(); renderTrend();
+  }
+  boot();
+
+  (function loadRemote(){
+    if(!REMOTE_STATS_URL || typeof fetch !== "function") return;
+    try{
+      fetch(REMOTE_STATS_URL, {cache:"no-store"})
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if(d && d.resources && d.resources.length && d.totals){
+            DATA = d; boot();
+            var flag = document.getElementById("live-flag");
+            if(flag){ flag.textContent = "· обновлено с сервера"; }
+          }
+        })
+        .catch(function(){});
+    }catch(e){}
+  })();
+})();
+</script>
+</body>
+</html>
