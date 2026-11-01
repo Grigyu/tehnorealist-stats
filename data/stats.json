@@ -1,11 +1,11 @@
 {
  "schema": 1,
  "meta": {
-  "snapshot_at": "2026-11-01T16:13:16.684654+03:00",
-  "snapshot_human": "01.11.2026, 16:13 МСК",
-  "next_human": "17:13 МСК",
+  "snapshot_at": "2026-11-01T21:55:27.023970+03:00",
+  "snapshot_human": "01.11.2026, 21:55 МСК",
+  "next_human": "22:55 МСК",
   "cadence_minutes": 60,
-  "records": 15,
+  "records": 16,
   "collector_version": "1.0",
   "db": "stats.db"
  },
@@ -25,9 +25,9 @@
   "resources": 15,
   "team_resources": 4,
   "mine_resources": 11,
-  "subscribers": 897,
+  "subscribers": 898,
   "publications": 53,
-  "views": 2006
+  "views": 2019
  },
  "resources": [
   {
@@ -37,14 +37,14 @@
    "title": "ТехноРеалист",
    "handle": "vk.com/rilltech",
    "url": "https://vk.com/rilltech",
-   "subscribers": 118,
+   "subscribers": 119,
    "publications": 2,
    "views": null,
    "status": "ok",
    "status_text": "доступно",
    "note": "ТехноРеалист",
    "source": "VK API + публичная страница (число записей)",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "max-rilltech",
@@ -72,12 +72,12 @@
    "url": "https://dzen.ru/id/625404029e04a968abdb6fcf",
    "subscribers": 18,
    "publications": 16,
-   "views": 913,
+   "views": 919,
    "status": "ok",
    "status_text": "доступно",
    "note": "ТехноРеалист",
    "source": "Дзен, публичный API канала",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "tenchat-galina",
@@ -93,7 +93,7 @@
    "status_text": "доступно",
    "note": "профиль участника команды",
    "source": "TenChat, публичная страница профиля",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "site-gromrez",
@@ -109,7 +109,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Игорь Громушкин — Архитектор Резонанса. Музыка на расстоянии",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "site-syncmusic",
@@ -125,7 +125,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Музыкальный Видео Мост — играйте вместе из разных городов",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "site-topblog",
@@ -141,7 +141,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Игорь Громушкин — ТопБЛОГ",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "site-buhanochka",
@@ -157,7 +157,7 @@
    "status_text": "доступно",
    "note": "HTTP 200 · Буханочка — музыкальный фестиваль волонтёров 23–25 октября 2026",
    "source": "HTTP-запрос, публичная страница",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "rutube-channel",
@@ -173,7 +173,7 @@
    "status_text": "доступно",
    "note": "видео в канале",
    "source": "Rutube API video/person",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "tg-way",
@@ -184,12 +184,12 @@
    "url": "https://t.me/The_way_to_alpha",
    "subscribers": 286,
    "publications": 20,
-   "views": 953,
+   "views": 960,
    "status": "ok",
    "status_text": "доступно",
    "note": "@The_way_to_alpha",
    "source": "t.me/s, публичная лента канала (последние посты)",
-   "checked_at": "01.11.2026 16:13",
+   "checked_at": "01.11.2026 21:55",
    "last_known": {
     "subscribers": 344,
     "at": "16.10.2026"
@@ -209,7 +209,7 @@
    "status_text": "доступно",
    "note": "@gromushkin_resonance",
    "source": "t.me/s, публичная лента канала (последние посты)",
-   "checked_at": "01.11.2026 16:13",
+   "checked_at": "01.11.2026 21:55",
    "last_known": {
     "subscribers": 3,
     "at": "07.10.2026"
@@ -229,7 +229,7 @@
    "status_text": "доступно",
    "note": "Игорь Громушкин • Архитектор Резонанса",
    "source": "VK API + публичная страница (число записей)",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "vk-igor",
@@ -245,7 +245,7 @@
    "status_text": "доступно",
    "note": "Игорь Громушкин",
    "source": "VK API users.get",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "dzen-mine",
@@ -261,7 +261,7 @@
    "status_text": "доступно",
    "note": "Игорь Громушкин • Архитектор Резонанса",
    "source": "Дзен, публичный API канала",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   },
   {
    "id": "site-nota",
@@ -277,7 +277,7 @@
    "status_text": "частично",
    "note": "HTTP 404",
    "source": "",
-   "checked_at": "01.11.2026 16:13"
+   "checked_at": "01.11.2026 21:55"
   }
  ],
  "history": [
@@ -355,6 +355,11 @@
    "at": "2026-11-01T16:13:16.684654+03:00",
    "subscribers": 897,
    "views": 2006
+  },
+  {
+   "at": "2026-11-01T21:55:27.023970+03:00",
+   "subscribers": 898,
+   "views": 2019
   }
  ]
 }
